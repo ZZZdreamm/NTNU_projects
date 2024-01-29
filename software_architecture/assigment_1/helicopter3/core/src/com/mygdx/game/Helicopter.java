@@ -25,8 +25,8 @@ public class Helicopter {
         sprite = new Sprite(textures[MathUtils.random(0, textures.length - 1)]);
         x = MathUtils.random(0, Gdx.graphics.getWidth() - sprite.getWidth());
         y = MathUtils.random(0, Gdx.graphics.getHeight() - sprite.getHeight());
-        xSpeed = MathUtils.random(50, 100) * (MathUtils.randomBoolean() ? 1 : -1);
-        ySpeed = MathUtils.random(50, 100) * (MathUtils.randomBoolean() ? 1 : -1);
+        xSpeed = MathUtils.random(50, 150) * (MathUtils.randomBoolean() ? 1 : -1);
+        ySpeed = MathUtils.random(50, 150) * (MathUtils.randomBoolean() ? 1 : -1);
         lastTexturesChangeTimes = TimeUtils.millis();
 
         sprite.flip(true, xSpeed > 0 ? false : true);

@@ -121,4 +121,8 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         
     }
+
+
 }
+
+

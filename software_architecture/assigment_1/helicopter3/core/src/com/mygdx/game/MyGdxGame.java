@@ -60,7 +60,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		for (int i = 0; i < helicopters.length; i++) {
 			Helicopter helicopter = helicopters[i];
 			boolean sameHorizontalDifferentVerticalMovement = false;
-			boolean bouncedFromAnother = false;
 
 			helicopter.x += helicopter.xSpeed * Gdx.graphics.getDeltaTime();
 			helicopter.y += helicopter.ySpeed * Gdx.graphics.getDeltaTime();
@@ -73,7 +72,6 @@ public class MyGdxGame extends ApplicationAdapter {
 				Helicopter otherHelicopter = helicopters[j];
 
 				if (helicopter.bounds.overlaps(otherHelicopter.bounds)) {
-					bouncedFromAnother = true;
 					sameHorizontalDifferentVerticalMovement = ((helicopter.ySpeed * otherHelicopter.ySpeed) > 0 && (helicopter.xSpeed * otherHelicopter.xSpeed) > 0) || ((helicopter.ySpeed * otherHelicopter.ySpeed) < 0 && (helicopter.xSpeed * otherHelicopter.xSpeed) > 0);
 
 					float tempXSpeed = helicopter.xSpeed;
@@ -96,9 +94,6 @@ public class MyGdxGame extends ApplicationAdapter {
 						otherHelicopter.updateBounds();
 					}
 
-//					helicopter.sprite.flip(false, true);
-//					otherHelicopter.sprite.flip(false, true);
-
 
 					if(sameHorizontalDifferentVerticalMovement == false){
 						helicopter.sprite.flip(false, true);
@@ -115,11 +110,17 @@ public class MyGdxGame extends ApplicationAdapter {
 			if (helicopter.x < 0 || helicopter.x + helicopter.sprite.getWidth() > Gdx.graphics.getWidth()) {
 				helicopter.xSpeed = -helicopter.xSpeed;
 				hitSideWall = true;
+				while(helicopter.x < 0 ||helicopter. x + helicopter.sprite.getWidth() > Gdx.graphics.getWidth()){
+					helicopter.x += helicopter.xSpeed * 0.01;
+				}
 			}
 
 			if (helicopter.y < 0 || helicopter.y + helicopter.sprite.getHeight() > Gdx.graphics.getHeight()) {
 				helicopter.ySpeed = -helicopter.ySpeed;
 				hitVerticalWall = true;
+				while(helicopter.y < 0 ||helicopter. y + helicopter.sprite.getWidth() > Gdx.graphics.getWidth()){
+					helicopter.y += helicopter.ySpeed * 0.01;
+				}
 			}
 
 			rotation += MathUtils.radiansToDegrees * MathUtils.atan2(helicopter.ySpeed, helicopter.xSpeed);

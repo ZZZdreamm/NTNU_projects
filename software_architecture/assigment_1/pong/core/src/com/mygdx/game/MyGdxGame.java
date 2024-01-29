@@ -1,5 +1,3 @@
-// change number of points need to win from 3 to 21!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -46,8 +44,8 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	private int consecutivePassCounter = 0;
 	private final int CONSECUTIVE_PASS_THRESHOLD = 5;
-	private final int BALL_STARTING_SPEED = 3;
-	private final int GAME_ENDING_POINTS = 21;
+	private final int BALL_STARTING_SPEED = 4;
+	private final int GAME_ENDING_POINTS = 10;
 
 	@Override
 	public void create() {
@@ -66,7 +64,6 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		restartButton = new Rectangle(WIDTH / 2 - RESTART_BUTTON_WIDTH / 2, HEIGHT / 4, RESTART_BUTTON_WIDTH, RESTART_BUTTON_HEIGHT);
 
-		// Set gameRunning to true to start the game automatically
 		gameRunning = true;
 	}
 
@@ -85,7 +82,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 
 	private void handleInput() {
-		// Control paddles with keyboard input
 		if (Gdx.input.isKeyPressed(Input.Keys.W) && paddle1.y < HEIGHT - PADDLE_HEIGHT) {
 			paddle1.y += paddleSpeed;
 		}
@@ -93,7 +89,6 @@ public class MyGdxGame extends ApplicationAdapter {
 			paddle1.y -= paddleSpeed;
 		}
 
-		// Control paddles vertically
 		if (Gdx.input.isKeyPressed(Input.Keys.UP) && paddle2.y < HEIGHT - PADDLE_HEIGHT) {
 			paddle2.y += paddleSpeed;
 		}
@@ -126,7 +121,6 @@ public class MyGdxGame extends ApplicationAdapter {
 				ballVelocity.y = -ballVelocity.y;
 			}
 
-			// Check consecutive passes
 			if (consecutivePassCounter >= CONSECUTIVE_PASS_THRESHOLD) {
 				ballVelocity.scl(1.5f);
 				consecutivePassCounter = 0;
@@ -146,7 +140,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		}
 
 		consecutivePassCounter = 0;
-		ballVelocity = new Vector2(MathUtils.randomSign() * BALL_STARTING_SPEED, MathUtils.randomSign() * BALL_STARTING_SPEED);
+		ballVelocity.set(MathUtils.randomSign() * BALL_STARTING_SPEED, MathUtils.randomSign() * BALL_STARTING_SPEED);
 
 		paddle1.y = HEIGHT / 2 - PADDLE_HEIGHT / 2;
 		paddle2.y = HEIGHT / 2 - PADDLE_HEIGHT / 2;
@@ -155,7 +149,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		ball.y = HEIGHT / 2 - BALL_SIZE / 2;
 
 		if (gameRestarting) {
-//			ballVelocity.set(MathUtils.randomSign() * 2, MathUtils.randomSign() * 2);
 			gameRestarting = false;
 		}
 	}
@@ -193,13 +186,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		shapeRenderer.end();
 
 		batch.begin();
-		font.setColor(Color.WHITE);                           //////////////////////////////////////////////////////change to 21
+		font.setColor(Color.WHITE);
 		font.getData().setScale(2);
-		font.draw(batch, "Game Over!", WIDTH / 2 - 80, HEIGHT / 2 + 70); // Adjusted position
-		font.draw(batch, "Player " + (player1Score == 3 ? "1" : "2") + " wins!", WIDTH / 2 - 90, HEIGHT / 2 + 20);
+		font.draw(batch, "Game Over!", WIDTH / 2 - 80, HEIGHT / 2 + 70);
+		font.draw(batch, "Player " + (player1Score == GAME_ENDING_POINTS ? "1" : "2") + " wins!", WIDTH / 2 - 90, HEIGHT / 2 + 20);
 
 		font.getData().setScale(1.5f);
-		font.draw(batch, "Score: " + (player1Score == 3 ? player1Score : player2Score) + " : " + (player1Score == 3 ? player2Score : player1Score), WIDTH / 2 - 60, HEIGHT / 2 - 40);
+		font.draw(batch, "Score: " + (player1Score) + " : " + (player2Score), WIDTH / 2 - 60, HEIGHT / 2 - 40);
 
 		font.getData().setScale(2f);
 		font.setColor(Color.BLACK);

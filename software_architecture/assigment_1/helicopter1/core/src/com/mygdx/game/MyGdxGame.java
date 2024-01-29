@@ -43,13 +43,19 @@ public class MyGdxGame extends ApplicationAdapter {
 		if (x < 0 || x + img.getWidth() > Gdx.graphics.getWidth()) {
 			xSpeed = -xSpeed;
 			hitSideWall = true;
-
+			while(x < 0 || x + img.getWidth() > Gdx.graphics.getWidth()){
+				x += xSpeed * 0.01;
+			}
 		}
 
 		if (y < 0 || y + img.getHeight() > Gdx.graphics.getHeight()) {
 			ySpeed = -ySpeed;
 			hitVerticalWall = true;
+			while (y < 0 || y + img.getHeight() > Gdx.graphics.getHeight()) {
+				y += ySpeed * 0.01;
+			}
 		}
+
 
 		rotation += MathUtils.radiansToDegrees * MathUtils.atan2(ySpeed, xSpeed);
 

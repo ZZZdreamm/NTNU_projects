@@ -86,4 +86,7 @@ tasks.register('run', Exec) {
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.mygdx.game/com.mygdx.game.AndroidLauncher'
 }
 
+
+
+
 eclipse.project.name = appName + "-android"
