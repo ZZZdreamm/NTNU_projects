@@ -35,15 +35,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(new InputAdapter() {
 			@Override
 			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-				if (x <= screenX && screenX <= x + img.getWidth() && y <= Gdx.graphics.getHeight() - screenY && Gdx.graphics.getHeight() - screenY <= y + img.getHeight()) {
-					isTouched = true;
-					touchX = screenX - x;
-					touchY = Gdx.graphics.getHeight() - screenY - y;
-					return true;
-				}
-				return false;
+				isTouched = true;
+				touchX = screenX - x;
+				touchY = Gdx.graphics.getHeight() - screenY - y;
+				return true;
 			}
-
 
 			@Override
 			public boolean touchDragged(int screenX, int screenY, int pointer) {
@@ -63,7 +59,13 @@ public class MyGdxGame extends ApplicationAdapter {
 						newY = Gdx.graphics.getHeight() - img.getHeight();
 					}
 
-					float angle = MathUtils.atan2(newY - y, newX - x) * MathUtils.radiansToDegrees + 180;
+					float centerX = x + img.getWidth() / 2;
+					float centerY = y + img.getHeight() / 2;
+
+					float deltaX = screenX - centerX;
+					float deltaY = Gdx.graphics.getHeight() - screenY - centerY;
+
+					float angle = MathUtils.atan2(deltaY, deltaX) * MathUtils.radiansToDegrees + 180;
 
 					sprite.setRotation(angle);
 
@@ -95,7 +97,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		sprite.draw(batch);
 
 		String positionText = "Sprite Position: (" + x + ", " + y + ")";
-		font.draw(batch, positionText, 10, Gdx.graphics.getHeight() - 10);
+		font.draw(batch, positionText,  10, Gdx.graphics.getHeight() - 10);
 
 		batch.end();
 	}

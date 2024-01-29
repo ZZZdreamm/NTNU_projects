@@ -46,6 +46,8 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	private int consecutivePassCounter = 0;
 	private final int CONSECUTIVE_PASS_THRESHOLD = 5;
+	private final int BALL_STARTING_SPEED = 3;
+	private final int GAME_ENDING_POINTS = 21;
 
 	@Override
 	public void create() {
@@ -60,7 +62,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		paddle1 = new Rectangle(10, HEIGHT / 2 - PADDLE_HEIGHT / 2, PADDLE_WIDTH, PADDLE_HEIGHT);
 		paddle2 = new Rectangle(WIDTH - PADDLE_WIDTH - 10, HEIGHT / 2 - PADDLE_HEIGHT / 2, PADDLE_WIDTH, PADDLE_HEIGHT);
 		ball = new Rectangle(WIDTH / 2 - BALL_SIZE / 2, HEIGHT / 2 - BALL_SIZE / 2, BALL_SIZE, BALL_SIZE);
-		ballVelocity = new Vector2(MathUtils.randomSign() * 3, MathUtils.randomSign() * 3);
+		ballVelocity = new Vector2(MathUtils.randomSign() * BALL_STARTING_SPEED, MathUtils.randomSign() * BALL_STARTING_SPEED);
 
 		restartButton = new Rectangle(WIDTH / 2 - RESTART_BUTTON_WIDTH / 2, HEIGHT / 4, RESTART_BUTTON_WIDTH, RESTART_BUTTON_HEIGHT);
 
@@ -102,71 +104,58 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	private void update() {
 		if (!gameRestarting) {
-			// Update ball position using velocity
 			ball.x += ballVelocity.x;
 			ball.y += ballVelocity.y;
 
-			// Check collision with paddles
 			if (ball.overlaps(paddle1) || ball.overlaps(paddle2)) {
 				ballVelocity.x = -ballVelocity.x;
-				consecutivePassCounter++; // Reset the counter on collision
+				consecutivePassCounter++;
 			}
 
-			// Check if ball missed paddles
 			if (ball.x < 0) {
-				// Player 2 scores
 				player2Score++;
 				checkGameOver();
 				resetGame();
 			} else if (ball.x > WIDTH - BALL_SIZE) {
-				// Player 1 scores
 				player1Score++;
 				checkGameOver();
 				resetGame();
 			}
 
-			// Check collision with walls
 			if (ball.y < 0 || ball.y > HEIGHT - BALL_SIZE) {
 				ballVelocity.y = -ballVelocity.y;
 			}
 
 			// Check consecutive passes
 			if (consecutivePassCounter >= CONSECUTIVE_PASS_THRESHOLD) {
-				// Increase velocity by a factor of 10
 				ballVelocity.scl(1.5f);
-				consecutivePassCounter = 0; // Reset the counter
+				consecutivePassCounter = 0;
 			}
 		}
 
 	}
-
 	private void checkGameOver() {
-		if (player1Score == 3 || player2Score == 3) {//////////////////////////////////////////////////////change to 21
+		if (player1Score == GAME_ENDING_POINTS || player2Score == GAME_ENDING_POINTS) {
 			gameRunning = false;
 		}
 	}
 
 	private void resetGame() {
 		if (!gameRunning) {
-			// Game is over, set gameRestarting to true
 			gameRestarting = true;
 		}
 
 		consecutivePassCounter = 0;
-		ballVelocity = new Vector2(MathUtils.randomSign() * 3, MathUtils.randomSign() * 3);
+		ballVelocity = new Vector2(MathUtils.randomSign() * BALL_STARTING_SPEED, MathUtils.randomSign() * BALL_STARTING_SPEED);
 
-		// Reset paddles position
 		paddle1.y = HEIGHT / 2 - PADDLE_HEIGHT / 2;
 		paddle2.y = HEIGHT / 2 - PADDLE_HEIGHT / 2;
 
-		// Reset ball position to the middle
 		ball.x = WIDTH / 2 - BALL_SIZE / 2;
 		ball.y = HEIGHT / 2 - BALL_SIZE / 2;
 
 		if (gameRestarting) {
-//			ballVelocity.scl(10f);
-			// Shoot the ball in a random direction
-			ballVelocity.set(MathUtils.randomSign() * 2, MathUtils.randomSign() * 2);
+//			ballVelocity.set(MathUtils.randomSign() * 2, MathUtils.randomSign() * 2);
 			gameRestarting = false;
 		}
 	}
@@ -181,11 +170,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRenderer.setColor(Color.WHITE);
 
-		// Draw paddles
 		shapeRenderer.rect(paddle1.x, paddle1.y, paddle1.width, paddle1.height);
 		shapeRenderer.rect(paddle2.x, paddle2.y, paddle2.width, paddle2.height);
 
-		// Draw ball
 		shapeRenderer.circle(ball.x + ball.width / 2, ball.y + ball.height / 2, ball.width / 2);
 
 		shapeRenderer.end();
@@ -201,7 +188,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		shapeRenderer.setColor(Color.GREEN); // Change the color to yellow
+		shapeRenderer.setColor(Color.GREEN);
 		shapeRenderer.rect(restartButton.x, restartButton.y, restartButton.width, restartButton.height);
 		shapeRenderer.end();
 
@@ -209,14 +196,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		font.setColor(Color.WHITE);                           //////////////////////////////////////////////////////change to 21
 		font.getData().setScale(2);
 		font.draw(batch, "Game Over!", WIDTH / 2 - 80, HEIGHT / 2 + 70); // Adjusted position
-		font.draw(batch, "Player " + (player1Score == 3 ? "1" : "2") + " wins!", WIDTH / 2 - 90, HEIGHT / 2 + 20); // Adjusted position
+		font.draw(batch, "Player " + (player1Score == 3 ? "1" : "2") + " wins!", WIDTH / 2 - 90, HEIGHT / 2 + 20);
 
 		font.getData().setScale(1.5f);
 		font.draw(batch, "Score: " + (player1Score == 3 ? player1Score : player2Score) + " : " + (player1Score == 3 ? player2Score : player1Score), WIDTH / 2 - 60, HEIGHT / 2 - 40);
 
-		font.getData().setScale(2f); // Increase the scale for bigger text
-		font.setColor(Color.BLACK); // Change the color to black
-		font.draw(batch, "Restart", WIDTH / 2 - 45, HEIGHT / 4 + 30); // Adjusted position
+		font.getData().setScale(2f);
+		font.setColor(Color.BLACK);
+		font.draw(batch, "Restart", WIDTH / 2 - 45, HEIGHT / 4 + 30);
 
 		batch.end();
 	}
@@ -228,7 +215,6 @@ public class MyGdxGame extends ApplicationAdapter {
 			camera.unproject(touchPos);
 
 			if (restartButton.contains(touchPos.x, touchPos.y)) {
-				// Restart the game
 				gameRunning = true;
 				resetGame();
 				player1Score = 0;
